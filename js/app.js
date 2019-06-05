@@ -15,63 +15,131 @@ var calculadora = {
         return n1*n2;
     },
     division: function(n1, n2){
-        if (n2==0){
             return n1/n2;
-        }else{
-            return n1/n2;
-        }
     },
     igual: function(n1, n2){
 
         if (operIgual=="suma"){
             total = calculadora.suma (n1, n2);
-            num1 = total;
-            verificarTotal();
-            
+
         }else if(operIgual=="resta"){
             total = calculadora.resta(n1, n2);
-            num1= total;
-            verificarTotal();
             
         }else if(operIgual=="multiplicacion"){
             total = calculadora.multip(n1, n2);
-            num1= total;
-            verificarTotal();
 
         }else if(operIgual=="division"){
             total = calculadora.division(n1, n2);
-            num1= total;
-            verificarTotal();
-        }  
+        }
+        num1=total;
+        verificarTotal();  
     }
 }
 var resultado = calculadora.display;
 
 function asignarTeclaNum(numero){
-    if (resultado.textContent=="0"){
-        resultado.innerHTML= numero;
-    }else{
-        //Verificar si el punto se encuentra en alguna posición
-        var punto = resultado.textContent.indexOf(".");
-        
-        //Si el punto no está entonces regresará un valor negativo
-        if (punto<0){
-            //Se restringe hasta 8 la cantidad de digitos
-            if (resultado.textContent.length < 8){
-                resultado.innerHTML= resultado.textContent + numero;
-            }
+    if (resultado.textContent!="ERROR!"){
+        if (resultado.textContent=="0"){
+            resultado.innerHTML= numero;
         }else{
-            //Pero si el punto está se amplia en 1 la cantidad de digitos aceptada
-            if (resultado.textContent.length < 9){
-                resultado.innerHTML= resultado.textContent + numero;
+            //Verificar si el punto se encuentra en alguna posición
+            var punto = resultado.textContent.indexOf(".");
+            
+            //Si el punto no está entonces regresará un valor negativo
+            if (punto<0){
+                //Se restringe hasta 8 la cantidad de digitos
+                if (resultado.textContent.length < 8){
+                    resultado.innerHTML= resultado.textContent + numero;
+                }
+            }else{
+                //Pero si el punto está se amplia en 1 la cantidad de digitos aceptada
+                if (resultado.textContent.length < 9){
+                    resultado.innerHTML= resultado.textContent + numero;
+                }
             }
         }
+
     }
+}
+
+function asignarOperacion(operacion){
+    /*Si la variable ultOperacion no está vacia es porque ya se había asignado el primer
+      numero a la variable num1, y nos queda enviar el segundo valor a la variable num2*/
+      if (ultOperacion!=""){
+    
+        num2=parseFloat(resultado.textContent);
+        
+        if (ultOperacion == operacion){
+            console.log("----BLOQUE 1-----");
+            console.log("num1 = ", num1);
+            console.log("ultOperacion es:", ultOperacion);
+            console.log("Operacion por parametro es:", operacion);
+            if (ultOperacion=="suma"){
+                total = calculadora.suma (num1, num2);                        
+            }
+            if (ultOperacion=="resta"){
+                total = calculadora.resta (num1, num2);                        
+            }
+            if(ultOperacion=="multiplicacion"){
+                total = calculadora.multip (num1, num2);                        
+            }
+            if(ultOperacion=="division"){
+                total = calculadora.division (num1, num2);                        
+            }
+            num1= total;
+            resultado.innerHTML="";
+            console.log("num2 = ", num2);
+            console.log("La última operación ejecutada es: ", ultOperacion)
+            console.log("El total es: ", total);
+            console.log("El nuevo valor de num1 es = ", num1);
+            console.log("------------------------------------------------");
+        }else{
+            console.log("----BLOQUE 2-----");
+            console.log("ultOperacion es:", ultOperacion);
+            console.log("Operacion por parametro es:", operacion);
+            if (ultOperacion=="suma"){
+                total = calculadora.suma (num1, num2);
+                console.log("Se ejecutó la operación pendiente: ", ultOperacion)
+                ultOperacion=operacion;
+            }else if (ultOperacion=="resta"){
+                total = calculadora.resta (num1, num2);                        
+                console.log("Se ejecutó la operación pendiente: ", ultOperacion)
+                ultOperacion=operacion;                        
+            }else if(ultOperacion=="multiplicacion"){
+                total = calculadora.multip (num1, num2);                        
+                console.log("Se ejecutó la operación pendiente: ", ultOperacion)
+                ultOperacion=operacion;                        
+            }else if(ultOperacion=="division"){
+                total = calculadora.division (num1, num2);                        
+                console.log("Se ejecutó la operación pendiente: ", ultOperacion)
+                ultOperacion=operacion;                        
+            }
+            num1= total;
+            resultado.innerHTML="";
+            console.log("num2 = ", num2);
+            console.log("El total es: ", total);
+            console.log("Ahora num1 es: ", num1);
+            console.log("------------------------------------------------");
+        }
+    }
+    
+    /*Si la variable ultOperacion está vacía
+    es porque no se ha digitado el primer número
+    por lo tanto se agrega el numero a la variable num1*/
+    if (ultOperacion==""){
+        num1=parseFloat(resultado.textContent);
+        console.log("num1 = ", num1);
+        ultOperacion=operacion;
+        resultado.innerHTML = "";
+    }
+    teclaIgual=0;
 }
 
 function verificarTotal(){
 
-    if (total==Infinity || total==NaN){
+    if (total==Infinity || total=="-Infinity"){
+        console.log("El total es: ", total);
+        alert("Al dividir un numero entre 0 su resultado es Indeterminado");
         resultado.innerHTML="ERROR!";
     }else{
         //1. pasamos a string el valor de la variable total
@@ -119,270 +187,30 @@ function iniciar(){
     /*---------------Asignar el valor de cada tecla al evento click-------------------------*/
     //tecla suma
     calculadora.funcionTecla(calculadora.teclaSeccion[18], "click", function(){
-        
-        /*Primero verificamos que si presionó la tecla suma
-        es porque ya había digitado algún número*/
-        if (resultado.textContent != ""){
-
-            /*Si la variable ultOperacion no está vacia es porque ya se había asignado el primer
-              numero a la variable num1, y nos queda enviar el segundo valor a la variable num2*/
-            if (ultOperacion!=""){
-
-                num2=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                console.log("num2 = ", num2);
-                
-                if (ultOperacion=="suma"){
-
-                    total = calculadora.suma (num1, num2);
-                    num1= total;
-                    resultado.innerHTML="";
-                    console.log("La última operación ejecutada es: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    console.log("------------------------------------------------");
-
-                    //se debe ejecutar la operacion que se encuentra en la variable ultOperacion
-                    // Y luego queda en la opción de suma esperando digitar el segundo numero
-
-                }else if(ultOperacion=="resta"){
-                    total = calculadora.resta(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="suma";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="multiplicacion"){
-                    total = calculadora.multip(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="suma";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="division"){
-                    total = calculadora.division(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="suma";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-                }
-            }
-
-            /*Si la variable ultOperacion está vacía
-            es porque no se ha digitado el primer número
-            por lo tanto se agrega el numero a la variable num1*/
-
-            if (ultOperacion==""){
-                num1=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                ultOperacion="suma";
-                resultado.innerHTML = "";
-            }
-            teclaIgual=0;
+        if (resultado.textContent != "" && resultado.textContent != "ERROR!"){
+            asignarOperacion("suma");
         }
     });
 
     //tecla restar
     calculadora.funcionTecla(calculadora.teclaSeccion[11], "click", function(){
-        
-        /*Primero verificamos que si presionó la tecla restar
-        es porque ya había digitado algún número*/
-        if (resultado.textContent != ""){
-
-            /*Si la variable ultOperacion no está vacia es porque ya se había asignado el primer
-              numero a la variable num1, y nos queda enviar el segundo valor a la variable num2*/
-            if (ultOperacion!=""){
-                num2=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                console.log("num2 = ", num2);
-                                
-                if (ultOperacion=="resta"){
-                    total = calculadora.resta (num1, num2);
-                    num1= total;
-                    resultado.innerHTML="";
-                    console.log("La última operación ejecutada es: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    console.log("------------------------------------------------");
-
-                    /*En caso de que la ultima operacion no sea resta, entonces se debe ejecutar 
-                      la operacion que se encuentra en la variable ultOperacion
-                      Y luego queda en la opción de resta esperando digitar el segundo numero*/
-                }else if(ultOperacion=="suma"){
-                    total = calculadora.suma(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="resta";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="multiplicacion"){
-                    total = calculadora.multip(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="resta";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="division"){
-                    total = calculadora.division(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="resta";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-                }            
-            }
-
-            /*Si la variable ultOperacion está vacía
-            es porque no se ha digitado el primer número
-            por lo tanto se agrega el numero a la variable num1*/
-            if (ultOperacion==""){
-                num1=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                ultOperacion="resta";
-                resultado.innerHTML = "";
-            }
-            teclaIgual=0;
+        if (resultado.textContent != "" && resultado.textContent != "ERROR!"){
+            asignarOperacion("resta");
         }
     });
     
     //tecla multiplicar
     calculadora.funcionTecla(calculadora.teclaSeccion[7], "click", function(){
-
-        /*Primero verificamos que si presionó la tecla multiplicacion
-        es porque ya había digitado algún número*/
-        if (resultado.textContent != ""){
-
-            /*Si la variable ultOperacion no está vacia es porque ya se había asignado el primer
-              numero a la variable num1, y nos queda enviar el segundo valor a la variable num2*/
-            if (ultOperacion!=""){
-                num2=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                console.log("num2 = ", num2);
-                
-                if (ultOperacion=="multiplicacion"){
-                    total = calculadora.multip (num1, num2);
-                    num1= total;
-                    resultado.innerHTML="";
-                    console.log("La última operación ejecutada es: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    console.log("------------------------------------------------");
-
-                    //se debe ejecutar la operacion que se encuentra en la variable ultOperacion
-                    // Y luego queda en la opción de multiplicacion esperando digitar el segundo numero
-                }else if(ultOperacion=="resta"){
-                    total = calculadora.resta(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="multiplicacion";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="suma"){
-                    total = calculadora.suma(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="multiplicacion";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="division"){
-                    total = calculadora.division(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="multiplicacion";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-                }            
-            }
-
-            /*Si la variable ultOperacion está vacía
-            es porque no se ha digitado el primer número
-            por lo tanto se agrega el numero a la variable num1*/
-            if (ultOperacion==""){
-                num1=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                ultOperacion="multiplicacion";
-                resultado.innerHTML = "";
-            }
-            teclaIgual=0;
-        }
+        if (resultado.textContent != "" && resultado.textContent != "ERROR!"){
+            asignarOperacion("multiplicacion");
+    }
     });
     
-    //tecla dividido
+    //tecla division
     calculadora.funcionTecla(calculadora.teclaSeccion[3], "click", function(){
-        /*Primero verificamos que si presionó la tecla division
-        es porque ya había digitado algún número*/
-        if (resultado.textContent != ""){
-            
-            /*Si la variable ultOperacion no está vacia es porque ya se había asignado el primer
-              numero a la variable num1, y nos queda enviar el segundo valor a la variable num2*/
-            if (ultOperacion!=""){
-                num2=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                console.log("num2 = ", num2);
-                
-                if (ultOperacion=="division"){
-                    total = calculadora.division (num1, num2);
-                    num1= total;
-                    resultado.innerHTML="";
-                    console.log("La última operación ejecutada es: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    console.log("------------------------------------------------");
-
-                    //se debe ejecutar la operacion que se encuentra en la variable ultOperacion
-                    // Y luego queda en la opción de division esperando digitar el segundo numero
-                }else if(ultOperacion=="resta"){
-                    total = calculadora.resta(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="division";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="multiplicacion"){
-                    total = calculadora.multip(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="division";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-
-                }else if(ultOperacion=="suma"){
-                    total = calculadora.suma(num1, num2);
-                    console.log("Se ejecutó la operación pendiente: ", ultOperacion)
-                    console.log("El total es: ", total);
-                    num1= total;
-                    ultOperacion="division";
-                    resultado.innerHTML="";
-                    console.log("------------------------------------------------");
-                }            
-            }
-
-            /*Si la variable ultOperacion está vacía
-            es porque no se ha digitado el primer número
-            por lo tanto se agrega el numero a la variable num1*/
-            if (ultOperacion==""){
-                num1=parseFloat(resultado.textContent);
-                console.log("num1 = ", num1);
-                ultOperacion="division";
-                resultado.innerHTML = "";
-            }
-            teclaIgual=0;
-        }
+        if (resultado.textContent != ""&& resultado.textContent != "ERROR!" ){
+            asignarOperacion("division");
+        }     
     });
     
     //tecla ON
@@ -400,7 +228,7 @@ function iniciar(){
 
     //tecla Cambio de signo
     calculadora.funcionTecla(calculadora.teclaSeccion[1], "click", function(){
-        if (resultado.textContent!="0" && resultado.textContent !=""){
+        if (resultado.textContent!="0" && resultado.textContent !="" && resultado.textContent != "ERROR!"){
             caracter=resultado.textContent;
             //Se verifica si la primera posición contiene el signo -
             if (caracter[0]=="-"){
@@ -416,22 +244,24 @@ function iniciar(){
 
     //tecla punto
     calculadora.funcionTecla(calculadora.teclaSeccion[16], "click", function(){
-        
-        //Verificar si el punto se encuentra en alguna posición
-        var punto = resultado.textContent.indexOf(".");
-        
-        //Si el punto no está entonces regresará un valor negativo
-        if (punto<0){
-            if (resultado.textContent.length <= 7){
-                /*Si el display está vacío o su contenido es 0, 
-                  debe agregar '0.' en el display, de lo contrario
-                  solo se agrega el punto a la derecha del numero*/
-                if(resultado.textContent=="" || resultado.textContent == "0"){
-                    resultado.textContent="0.";
-                }else{
-                    resultado.innerHTML = resultado.textContent + "."
-                }
-            }
+        if (resultado.textContent != "ERROR!"){
+            
+                    //Verificar si el punto se encuentra en alguna posición
+                    var punto = resultado.textContent.indexOf(".");
+                    
+                    //Si el punto no está entonces regresará un valor negativo
+                    if (punto<0){
+                        if (resultado.textContent.length <= 7){
+                            /*Si el display está vacío o su contenido es 0, 
+                              debe agregar '0.' en el display, de lo contrario
+                              solo se agrega el punto a la derecha del numero*/
+                            if(resultado.textContent=="" || resultado.textContent == "0"){
+                                resultado.textContent="0.";
+                            }else{
+                                resultado.innerHTML = resultado.textContent + "."
+                            }
+                        }
+                    }
         }
 
     });
@@ -440,40 +270,27 @@ function iniciar(){
     calculadora.funcionTecla(calculadora.teclaSeccion[17], "click", function(){
         /*1. Si la variable ultOperacion está vacía es porque no se ha realizado
              ninguna operacion por ende no se ejecuta nada*/ 
+             
+        console.log("ultOperacion = ", ultOperacion);
+        if (ultOperacion!="" && teclaIgual==0){
 
-        if (ultOperacion!=""){
-            //2. Se verifica que no haya ningún error ocasionado por dividir algún valor entre 0
-            if (total==Infinity || total== NaN){
-                resultado.innerHTML="ERROR!";
-                alert("Al dividir por 0 se obtiene un resultado Indeterminado");
-            }else{
-                
-                /*Se verifica si se presionó la tecla igual anteriormente, es decir,
-                  si su valor es mayor a 0*/
-                if (teclaIgual>=1){
-
-                    /*Como cada una de las teclas de los operadores asigna 0 a la variable
-                      teclaIgual, entonces si su valor es igual o mayor a 1 es porque
-                      no se ha realizado una operación diferente después de haber oprimido la
-                      tecla igual y ejecutamos la última operación nuevamente*/
-
-                    calculadora.igual(num1, num2);
-                    teclaIgual++;
-                }else{
-
-                    /*Al presionar la tecla igual, se debe ejecutar la última operación 
-                      pendiente por realizar*/
-                    
-                    num2=parseFloat(resultado.textContent);
-                    operIgual=ultOperacion;
-                    ultOperacion="";
-                    console.log("num1 = ", num1);
-                    console.log("num2 = ", num2);                    
-                    calculadora.igual(num1, num2);
-
-                    teclaIgual++;
-                }
-            }
+            /*Al presionar la tecla igual, se debe ejecutar la última operación 
+            pendiente por realizar*/
+            
+            num2=parseFloat(resultado.textContent);
+            operIgual=ultOperacion;
+            ultOperacion="";
+            calculadora.igual(num1, num2);
+            
+            teclaIgual++;
+        }else{
+            /*Como cada una de las teclas de los operadores asigna 0 a la variable
+              teclaIgual, entonces si su valor es igual o mayor a 1 es porque
+              no se ha realizado una operación diferente después de haber oprimido la
+              tecla igual y ejecutamos la última operación nuevamente*/
+    
+            calculadora.igual(num1, num2);
+            teclaIgual++;
         }
     });
 
