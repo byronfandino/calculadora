@@ -12,6 +12,7 @@ var calculadora = {
         return n1-n2;
     },
     multip: function(n1, n2){
+        console.log("n1 = ", n1, " ------> n2 = ", n2);
         return n1*n2;
     },
     division: function(n1, n2){
@@ -233,10 +234,8 @@ function iniciar(){
             //Se verifica si la primera posición contiene el signo -
             if (caracter[0]=="-"){
                 //Se procede a eliminar la primera posición del string
-                num1=num1*(-1);
                 resultado.innerHTML = caracter.substr(1);
             }else{
-                num1=num1*(-1);
                 resultado.innerHTML = "-" + resultado.textContent
             }
         }
